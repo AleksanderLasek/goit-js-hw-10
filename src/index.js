@@ -1,5 +1,7 @@
 import './css/styles.css';
 const _ = require('lodash');
+import Notiflix from 'notiflix';
+import { fetchCountries } from './js/fetchCountries';
 
 const DEBOUNCE_DELAY = 300;
 
@@ -10,37 +12,13 @@ const $countryInfo = document.querySelector('.country-info');
 const inputEvent = $search.addEventListener(
   'input',
   _.debounce(event => {
+    $search.value = $search.value.trim();
     fetchCountries($search.value);
   }),
-  3000,
+  300,
 );
 
-function fetchCountries(name) {
-  fetch(
-    `https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`,
-  )
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    })
-    .then(data => {
-      if (data.length > 10) {
-        console.log('Too many matches found. Please enter a more specific name.');
-      } else {
-        renderCountryList(data);
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      console.log('Nie ma takiego kraju');
-    });
-}
-
-function renderCountryList(countries) {
-  console.log(countries);
-
+export function renderCountryList(countries) {
   if (countries.length === 1) {
     const markup = countries
       .map(countries => {
@@ -54,7 +32,6 @@ function renderCountryList(countries) {
 
     const SpecMarkup = countries
       .map(countries => {
-        console.log(Object.values(countries.languages).toString().replace(',', ', '));
         return `<p><b>Capital:</b> ${countries.capital}</p>
            <p><b>Population:</b> ${countries.population}</p>
            <p><b>Languages:</b> ${Object.values(countries.languages)
@@ -66,6 +43,7 @@ function renderCountryList(countries) {
     $countryInfo.innerHTML = SpecMarkup;
 
     console.log('Jest tylko 1 kraj');
+    Notiflix.Notify.success('Jest tylko 1 kraj');
   } else {
     const markup = countries
       .map(countries => {

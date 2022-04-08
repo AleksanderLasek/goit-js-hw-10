@@ -25,6 +25,7 @@
     "posthtml-include": "^1.6.2"
   },
   "dependencies": {
-    "lodash.debounce": "^4.0.8"
+    "lodash.debounce": "^4.0.8",
+    "notiflix": "^3.2.5"
   }
 }
