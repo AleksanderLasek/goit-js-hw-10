@@ -13,18 +13,34 @@ const inputEvent = $search.addEventListener(
   'input',
   _.debounce(event => {
     $search.value = $search.value.trim();
-    fetchCountries($search.value);
+    if ($search.value !== '') fetchCountries($search.value);
   }),
   300,
 );
 
+const inputEventClear = $search.addEventListener(
+  'input',
+  _.debounce(event => {
+    $search.value = $search.value.trim();
+    if ($search.value === '') {
+      clearElement($countryInfo);
+      clearElement($countryList);
+    }
+  }),
+  300,
+);
+
+export function clearElement(element) {
+  element.innerHTML = '';
+}
+
 export function renderCountryList(countries) {
   if (countries.length === 1) {
-    const markup = countries
+    const markup = countries //class="one-country"
       .map(countries => {
-        return `<li>
-          <img src="${countries.flags.svg}"/>
-          <p><b>Name</b>: ${countries.name.official}</p>
+        return `<li class="one-country">
+          <img src="${countries.flags.svg}" class="one-country"/>
+          <p class="one-country">${countries.name.official}</p>
           </li>`;
       })
       .join('');
@@ -32,24 +48,21 @@ export function renderCountryList(countries) {
 
     const SpecMarkup = countries
       .map(countries => {
-        return `<p><b>Capital:</b> ${countries.capital}</p>
-           <p><b>Population:</b> ${countries.population}</p>
-           <p><b>Languages:</b> ${Object.values(countries.languages)
+        return `<p class="one-country"><b>Capital:</b> ${countries.capital}</p>
+           <p class="one-country"><b>Population:</b> ${countries.population}</p>
+           <p class="one-country"><b>Languages:</b> ${Object.values(countries.languages)
              .toString()
              .replace(',', ', ')}</p>
           `;
       })
       .join('');
     $countryInfo.innerHTML = SpecMarkup;
-
-    console.log('Jest tylko 1 kraj');
-    Notiflix.Notify.success('Jest tylko 1 kraj');
   } else {
-    const markup = countries
+    const markup = countries //class="many-countries"
       .map(countries => {
-        return `<li>
-          <img src="${countries.flags.svg}"/>
-          <p><b>Name</b>: ${countries.name.official}</p>
+        return `<li class="many-countries">
+          <img src="${countries.flags.svg}" class="many-countries"/>
+          <p class="many-countries">${countries.name.official}</p>
           </li>`;
       })
       .join('');

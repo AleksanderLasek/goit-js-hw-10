@@ -1,4 +1,4 @@
-import { renderCountryList } from '..';
+import { renderCountryList, clearElement } from '..';
 import Notiflix from 'notiflix';
 
 export function fetchCountries(name) {
@@ -20,6 +20,8 @@ export function fetchCountries(name) {
       }
     })
     .catch(error => {
+      clearElement(document.querySelector('.country-info'));
+      clearElement(document.querySelector('.country-list'));
       Notiflix.Notify.failure('Oops, there is no country with that name');
     });
 }
